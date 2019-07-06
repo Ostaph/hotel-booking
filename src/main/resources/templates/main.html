@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MYHotel</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="/css/div-style.css" rel="stylesheet" type="text/css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <script>
+        $(function () {
+            $("#date1").datepicker({ dateFormat: 'mm.dd.yy' });
+        });
+
+        $(function () {
+            $("#date2").datepicker({ dateFormat: 'mm.dd.yy' });
+        })
+    </script>
+</head>
+<body>
+
+<div id="wrap">
+<nav class="navbar navbar navbar-expand-md navbar-light bg-light ns" id="for-header">
+    <a class="navbar-brand font-weight-bold ml-5" href="/"><h1><span>MY</span><span class="text-warning">Hotel</span></h1></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link font-weight-bold ml-5" href="/"><h4>Home</h4> <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <div th:if="${user!=null}">
+                    <div th:if="${user.role==user_role}"><h4><a class="nav-link  ml-5" href="/user">User
+                        cabinet <span class="sr-only">(current)</span></a></h4>
+                    </div>
+                    <div th:if="${user.role==admin_role}"><h4><a class="nav-link  ml-5" href="/admin">Admin
+                        cabinet <span class="sr-only">(current)</span></a></h4>
+                    </div>
+                    <div th:if="${user.role==hoteladmin_role}"><h4><a class="nav-link ml-5"
+                                                                  href="/hoteladmin">Hotel admin cabinet <span
+                            class="sr-only">(current)</span></a></h4>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="mr-3" th:if="${user==null}"><h5><a href="/login">sing in</a></h5></div>
+        <div class="mr-3" th:if="${user==null}"><h5><a href="/registration">sing up</a></h5></div>
+        <div class="mr-3" th:if="${user!=null}"><h5><span th:text="${user.username}"></span></h5></div>
+        <div class="mr-3" th:if="${user}!=null">
+            <form th:action="@{/logout}" method="get">
+                <button class="btn btn-primary" type="submit" value="">Logout</button>
+            </form>
+
+        </div>
+    </div>
+</nav>
+
+<div>
+
+</div>
+<div class="py-5 text-center">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-primary font-weight-bold display-2 text-b logo-font"><span
+                        class="text-dark">MY</span><span class="text-warning">Hotel</span></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class=" text-center">
+    <div class="container">
+                    <div class="form-group row justify-content-center align-items-center">
+                        <input type="hidden">
+                        <div class="col-md-5  " >
+                            <input type="text" class="form-control input-lg finder" required  name="finder" placeholder="City or hotel's name">
+                        </div>
+                        <div class=" col-md-1  " >
+                            <input type="text" class="form-control input-lg countOfGuests" required  name="countOfGuests" placeholder="Guests">
+                        </div>
+                        <div class=" col-md-1  ">
+                            <input id="date1" class="form-control input-lg" name="from_date" type="text" size="8" required  placeholder="from">
+                        </div>
+                        <div class="col-md-1  ">
+                            <input id="date2"  class="form-control input-lg"  name="to_date" type="text" size="8" required  placeholder="to">
+                        </div>
+                        <div class=" col-md-1  ">
+                            <button class="btn btn-primary " type="submit" id="submit">Find!</button>
+                        </div>
+                        </div>
+            </div>
+</div>
+<div class="form-inline d-none justify-content-center selector mb-2">
+    <label class="mr-sm-2" for="inlineFormCustomSelect">Sorting by :</label>
+    <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+        <option selected>Choose filter field...</option>
+        <option value="cheap">From cheap to expensive</option>
+        <option value="expensive">From expensive to cheap</option>
+    </select>
+
+    <button type="submit" class="btn btn-primary " id="sortSubmit">Submit</button>
+</div>
+<div class="card-columns" id="commonBox">
+        <!--Here is found results of searching-->
+</div>
+
+<!--Message about incorrect data-->
+<div class="container mt-3">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-4" id ="alert">
+
+        </div>
+    </div>
+</div>
+</div>
+<!--FOOTER-->
+
+<div class="footer" id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <p class="footer__name">© MYHotel.com 2019</p>
+                <p>MYHotel - the best site to search for hotels</p>
+            </div>
+            <div class="col-4">
+                <p class="footer__social">Our social networks:</p>
+                <p class="footer__social-icons">
+                    <a href="https://twitter.com" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://facebook.com" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://plus.google.com" target="_blank">
+                        <i class="fab fa-google-plus-g"></i>
+                    </a>
+                </p>
+            </div>
+            <div class="col-4">
+                <p class="feedback">Our email:</p>
+                <p class="feedback">MYHotel@blabla.com</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript" th:src="@{/js/nav.js}"></script>
+<script type="text/javascript" th:src="@{/js/mainPage.js}"></script>
+</body>
+</html>
